@@ -1,0 +1,96 @@
+#1)
+
+import threading
+
+def thread_function(color, number):
+    print(f"Thread {number}: A cor do plano de fundo é {color}")
+
+threads = []
+
+colors = ["vermelho", "verde", "azul", "amarelo"]
+
+for i, color in enumerate(colors, 1):
+    thread = threading.Thread(target=thread_function, args=(color, i))
+    threads.append(thread)
+    thread.start()
+
+for thread in threads:
+    thread.join()
+# 2)
+
+import threading
+
+x = 0
+
+def increment_global():
+    global x
+    x += 1
+    print(f"Thread {threading.current_thread().name}: x is {x}")
+
+threads = []
+
+for _ in range(2):
+    thread = threading.Thread(target=increment_global)
+    threads.append(thread)
+    thread.start()
+
+for thread in threads:
+    thread.join()
+
+print("Final value of x:", x)
+
+
+# 3)
+
+import threading
+import random
+import time
+
+def producer(queue):
+    for _ in range(100):
+        item = random.randint(1, 100)
+        queue.append(item)
+        print(f"Produzido item: {item}")
+        time.sleep(random.uniform(0.1, 0.5))
+
+def consumer(queue):
+    while True:
+        if queue:
+            item = queue.pop(0)
+            print(f"Consumido item: {item}")
+            time.sleep(random.uniform(0.1, 0.5))
+
+queue = []
+producer_thread = threading.Thread(target=producer, args=(queue,))
+consumer_thread = threading.Thread(target=consumer, args=(queue,))
+
+producer_thread.start()
+consumer_thread.start()
+
+producer_thread.join()
+consumer_thread.join()
+
+print("Programa encerrado.")
+
+
+# 4)
+
+import threading
+import time
+
+def print_message():
+    for i in range(5):
+        print(f"Thread {threading.current_thread().name}: Mensagem {i+1}")
+        time.sleep(1)
+
+threads = []
+
+for i in range(5):
+    thread = threading.Thread(target=print_message)
+    threads.append(thread)
+    thread.start()
+
+for thread in threads:
+    thread.join()
+
+print("Todas as threads concluíram.")
